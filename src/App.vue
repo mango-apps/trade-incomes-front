@@ -6,8 +6,12 @@
 
 <script>
 export default {
+  name: 'App',
+  metaInfo: {
+    title: 'Default Title'
+  },
   created() {
-    console.log(process.env)
+    document.title = 'Fundo de Investimentos BW'
   }
 }
 </script>

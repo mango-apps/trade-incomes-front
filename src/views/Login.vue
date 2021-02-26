@@ -1,7 +1,9 @@
 <template>
   <div class="container flex flex-column">
-    <h1>Bem-vindo de volta!</h1>
-    <img src="../assets/icons/login.svg" alt="" srcset="" />
+    <header>
+      <h1>Bem-vindo de volta!</h1>
+      <img src="../assets/icons/login.svg" alt="" srcset="" />
+    </header>
 
     <form class="form flex flex-column">
       <label for="email">Email:</label>
@@ -14,18 +16,25 @@
 </template>
 
 <script>
-export default {}
+export default {
+  name: 'Login'
+}
 </script>
 
 <style lang="scss" scoped>
 .container {
-  h1 {
-    text-align: center;
-    font-weight: 100;
-    font-size: 48px;
-    line-height: 45px;
-    word-break: break-all;
-    padding: 0 2rem;
+  header {
+    h1 {
+      text-align: center;
+      font-weight: 100;
+      font-size: 48px;
+      line-height: 45px;
+      word-break: break-all;
+      padding: 0 2rem;
+    }
+    img {
+      max-width: 100%;
+    }
   }
 
   .form {
