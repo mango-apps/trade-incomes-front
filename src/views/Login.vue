@@ -7,10 +7,15 @@
 
     <form class="form flex flex-column">
       <label for="email">Email:</label>
-      <input id="email" type="email" />
+      <input id="email" type="email" placeholder="nome.sobrenome@email.com" />
 
       <label for="password">Senha: </label>
-      <input type="password" name="password" id="password" />
+      <input
+        type="password"
+        name="password"
+        id="password"
+        placeholder="**********"
+      />
 
       <button type="submit">Login</button>
     </form>
@@ -65,6 +70,16 @@ export default {
       background: rgba($color: #fff, $alpha: 0.05);
       border: 2px solid $dark;
       border-radius: 7px;
+      padding-left: 15px;
+      font-size: 1rem;
+      &::placeholder {
+        font-size: 1rem;
+        color: rgba($color: $foreground, $alpha: 0.5);
+      }
+      &:focus {
+        outline: none;
+        border-color: $primary;
+      }
     }
 
     button {
