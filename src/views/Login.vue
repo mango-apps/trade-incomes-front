@@ -11,6 +11,8 @@
 
       <label for="password">Senha: </label>
       <input type="password" name="password" id="password" />
+
+      <button type="submit">Login</button>
     </form>
   </div>
 </template>
@@ -23,6 +25,11 @@ export default {
 
 <style lang="scss" scoped>
 .container {
+  min-height: 100vh;
+  @media (min-width: 600px) {
+    max-width: 600px;
+    margin: 0 auto;
+  }
   header {
     h1 {
       text-align: center;
@@ -34,17 +41,50 @@ export default {
     }
     img {
       max-width: 100%;
+      @media (min-width: 600px) {
+        display: block;
+        margin: 0 auto;
+      }
     }
   }
 
   .form {
+    margin-top: 2rem;
+    position: relative;
+    flex-grow: 1;
     label {
       color: $foreground;
+      font-size: 1.5rem;
+      margin-bottom: 5px;
       &:last-of-type {
         margin-top: 1rem;
       }
     }
-    margin-top: 2rem;
+    input {
+      height: 2.25rem;
+      background: rgba($color: #fff, $alpha: 0.05);
+      border: 2px solid $dark;
+      border-radius: 7px;
+    }
+
+    button {
+      height: 2.25rem;
+      position: absolute;
+      bottom: 10px;
+      left: 0;
+      width: 100%;
+      border: transparent;
+      border-radius: 7px;
+      font-weight: bold;
+      color: $background;
+      font-size: 1.15rem;
+      @media (min-width: 600px) {
+        position: unset;
+        margin-top: 1rem;
+        width: 25%;
+        margin-left: 75%;
+      }
+    }
   }
 }
 </style>
