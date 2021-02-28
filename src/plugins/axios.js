@@ -6,9 +6,10 @@ import axios from 'axios'
 // Full config:  https://github.com/axios/axios#request-config
 axios.defaults.baseURL = process.env.VUE_APP_API
 
-axios.defaults.headers.common['Authorization'] = `Bearer ${
-  JSON.parse(localStorage.vuex).token
-}`
+if (localStorage.vuex) {
+  const vuex = JSON.parse(localStorage.vuex)
+  axios.defaults.headers.common['Authorization'] = `Bearer ${vuex.token}`
+}
 
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
