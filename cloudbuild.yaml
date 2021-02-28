@@ -1,0 +1,15 @@
+- name: node
+  entrypoint: npm
+  args: ['install']
+# Necessary for vue.js projects
+- name: node
+  entrypoint: npm
+  args: ['install', '-g', '@vue/cli']
+- name: node
+  entrypoint: npm
+  args: ['test']
+- name: node
+  entrypoint: npm
+  args: ['run', 'build']
+- name: 'gcr.io/cloud-builders/gcloud'
+  args: ['app', 'deploy']
