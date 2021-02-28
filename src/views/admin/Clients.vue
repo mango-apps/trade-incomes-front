@@ -37,14 +37,16 @@
         </div>
       </Card>
     </div>
+    <admin-nav></admin-nav>
   </div>
 </template>
 
 <script>
 import Card from '@/components/Card.vue'
+import AdminNav from '@/components/AdminNav.vue'
 export default {
   name: 'Clients',
-  components: { Card },
+  components: { Card, AdminNav },
   data: () => ({
     users: [],
     loading: true
