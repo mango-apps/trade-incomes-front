@@ -1,6 +1,7 @@
 <template>
   <nav class="nav">
-    <div
+    <router-link
+      to="/admin/clients"
       :class="[
         'nav-item flex flex-column',
         { active: tabActive === 'clients' }
@@ -8,7 +9,7 @@
     >
       <uil-list-ul size="30px" />
       Clientes
-    </div>
+    </router-link>
     <div class="nav-item flex flex-column">
       <uil-money-withdrawal size="30px" /> Saques
     </div>
@@ -67,6 +68,8 @@ export default {
 
     align-items: center;
     justify-content: center;
+
+    text-decoration: none;
 
     &.active {
       color: $accent;
