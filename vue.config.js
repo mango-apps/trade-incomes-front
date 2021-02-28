@@ -5,5 +5,10 @@ module.exports = {
         prependData: `@import "@/assets/scss/index.scss";`
       }
     }
+  },
+  pwa: {
+    workboxOptions: {
+      exclude: [/_redirects/]
+    }
   }
 }
