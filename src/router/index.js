@@ -28,6 +28,11 @@ router.beforeEach((to, _from, next) => {
   if (to.meta.adminAuth) {
     store.state.isAdmin ? next() : next('/')
   }
+
+  if (to.name === 'Login' && store.state.token !== '') {
+    store.state.isAdmin ? next('/admin/clients') : next('/')
+  }
+
   next()
 })
 
