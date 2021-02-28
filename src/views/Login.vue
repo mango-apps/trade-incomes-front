@@ -75,6 +75,10 @@ export default {
 
         this.setToken(data.token)
         this.setIsAdmin(data.admin)
+
+        if (data.admin) {
+          this.$router.push('/admin/clients')
+        }
       } catch ({ response: { data } }) {
         if (data.error === 'Email is malformatted' && this.email === '') {
           this.emailDirty = {
