@@ -5,17 +5,29 @@
       <img src="../assets/icons/login.svg" alt="" srcset="" />
     </header>
 
-    <form class="form flex flex-column">
+    <form class="form flex flex-column" @submit.prevent="login" method="post">
       <label for="email">Email:</label>
-      <input id="email" type="email" placeholder="nome.sobrenome@email.com" />
+      <input
+        id="email"
+        ref="email"
+        type="email"
+        placeholder="nome.sobrenome@email.com"
+        :class="{ dirty: emailDirty.state }"
+        v-model="email"
+      />
+      <span v-if="emailDirty.state">{{ emailDirty.message }}</span>
 
       <label for="password">Senha: </label>
       <input
         type="password"
+        ref="password"
         name="password"
         id="password"
         placeholder="**********"
+        :class="{ dirty: passwordDirty.state }"
+        v-model="password"
       />
+      <span v-if="passwordDirty.state">{{ passwordDirty.message }}</span>
 
       <button type="submit">Login</button>
     </form>
@@ -24,7 +36,59 @@
 
 <script>
 export default {
-  name: 'Login'
+  name: 'Login',
+  data: () => ({
+    email: '',
+    password: '',
+    emailDirty: {
+      state: false,
+      message: ''
+    },
+    passwordDirty: {
+      state: false,
+      message: ''
+    }
+  }),
+  watch: {
+    email() {
+      this.emailDirty.state = false
+    },
+    password() {
+      this.passwordDirty.state = false
+    }
+  },
+  methods: {
+    async login() {
+      try {
+        const { data } = await this.$axios.post('/auth/login', {
+          email: this.email,
+          password: this.password
+        })
+        this.$axios.headers = { Authorization: `Bearer ${data.token}` }
+
+        if (data.admin) {
+          console.log('é admin')
+        }
+      } catch ({ response: { data } }) {
+        if (data.error === 'Email is malformatted' && this.email === '') {
+          this.emailDirty = {
+            state: true,
+            message: 'Email mal formatado'
+          }
+        } else if (data.error === 'User not found') {
+          this.emailDirty = {
+            state: true,
+            message: 'Usuário não encontrado'
+          }
+        } else if (data.error === `Password don't match`) {
+          this.passwordDirty = {
+            state: true,
+            message: 'Senha incorreta'
+          }
+        }
+      }
+    }
+  }
 }
 </script>
 
@@ -80,6 +144,16 @@ export default {
         outline: none;
         border-color: $primary;
       }
+      &.dirty {
+        border-color: $danger;
+        &::placeholder {
+          color: $danger;
+        }
+      }
+    }
+
+    span {
+      color: $danger;
     }
 
     button {
