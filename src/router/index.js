@@ -13,6 +13,7 @@ const routes = [
   },
   {
     path: '/admin/clients',
+    name: 'Client List',
     component: () => import('../views/admin/Clients.vue'),
     meta: { adminAuth: true }
   }

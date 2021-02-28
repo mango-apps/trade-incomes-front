@@ -4,7 +4,10 @@
 
 <script>
 export default {
-  name: 'Clients'
+  name: 'Clients',
+  created() {
+    this.$axios.get('/manager/users')
+  }
 }
 </script>
 
