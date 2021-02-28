@@ -1,14 +1,19 @@
 <template>
   <nav class="nav">
-    <div class="nav-item flex flex-column active">
-      <uil-list-ul size="25px" />
+    <div
+      :class="[
+        'nav-item flex flex-column',
+        { active: tabActive === 'clients' }
+      ]"
+    >
+      <uil-list-ul size="30px" />
       Clientes
     </div>
     <div class="nav-item flex flex-column">
-      <uil-money-withdrawal size="25px" /> Saques
+      <uil-money-withdrawal size="30px" /> Saques
     </div>
     <div class="nav-item flex flex-column">
-      <uil-user-plus size="25px" /> Registrar Cliente
+      <uil-user-plus size="30px" /> Registrar Cliente
     </div>
   </nav>
 </template>
@@ -25,6 +30,12 @@ export default {
     UilListUl,
     UilMoneyWithdrawal,
     UilUserPlus
+  },
+  props: {
+    tabActive: {
+      type: String,
+      required: true
+    }
   }
 }
 </script>
@@ -51,7 +62,7 @@ export default {
     flex: 1;
     color: $dark-grey;
     font-family: 'Saira', sans-serif;
-    font-weight: 600;
+    font-weight: 500;
     font-size: 13px;
 
     align-items: center;

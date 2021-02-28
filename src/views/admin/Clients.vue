@@ -37,7 +37,7 @@
         </div>
       </Card>
     </div>
-    <admin-nav></admin-nav>
+    <admin-nav tab-active="clients"></admin-nav>
   </div>
 </template>
 
