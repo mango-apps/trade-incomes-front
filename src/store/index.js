@@ -5,9 +5,17 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    token: ''
+    token: '',
+    isAdmin: false
   },
-  mutations: {},
+  mutations: {
+    setToken(state, param) {
+      state.token = param
+    },
+    setIsAdmin(state, param) {
+      state.isAdmin = param
+    }
+  },
   actions: {},
   modules: {}
 })

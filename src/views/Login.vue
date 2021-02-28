@@ -37,6 +37,7 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
 export default {
   name: 'Login',
   data: () => ({
@@ -61,6 +62,7 @@ export default {
     }
   },
   methods: {
+    ...mapMutations(['setToken', 'setIsAdmin']),
     async login() {
       this.loading = true
       try {
@@ -68,11 +70,11 @@ export default {
           email: this.email,
           password: this.password
         })
+
         this.$axios.headers = { Authorization: `Bearer ${data.token}` }
 
-        if (data.admin) {
-          console.log('é admin')
-        }
+        this.setToken(data.token)
+        this.setIsAdmin(data.admin)
       } catch ({ response: { data } }) {
         if (data.error === 'Email is malformatted' && this.email === '') {
           this.emailDirty = {
