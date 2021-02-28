@@ -1,7 +1,7 @@
 <template>
-  <div class="clients container">
+  <div class="container">
     <h1 class="title">Lista de Clientes</h1>
-    <div class="card-list flex-container flex-column">
+    <div class="card-list flex flex-column">
       <Card v-for="user in users" :key="user.cpf">
         <div class="profile flex center flex-row vertical-center">
           <h1 class="is-dark">{{ user.name | splitInitials }}</h1>
@@ -72,6 +72,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.container {
+  height: 100%;
+  @media (min-width: 600px) {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+}
+
+.card-list {
+  align-items: center;
+}
 .profile {
   width: 90px;
   height: 90px;
