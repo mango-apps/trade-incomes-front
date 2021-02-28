@@ -71,7 +71,9 @@ export default {
           password: this.password
         })
 
-        this.$axios.headers = { Authorization: `Bearer ${data.token}` }
+        this.$axios.defaults.headers.common[
+          'Authorization'
+        ] = `Bearer ${data.token}`
 
         this.setToken(data.token)
         this.setIsAdmin(data.admin)

@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  name: 'Admin Nav'
+  name: 'AdminNav'
 }
 </script>
 <style lang="scss" scoped>
