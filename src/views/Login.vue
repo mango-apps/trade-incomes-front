@@ -29,7 +29,9 @@
       />
       <span v-if="passwordDirty.state">{{ passwordDirty.message }}</span>
 
-      <button type="submit">Login</button>
+      <button type="submit">
+        {{ loading ? 'Entrando...' : 'Login' }}
+      </button>
     </form>
   </div>
 </template>
@@ -40,6 +42,7 @@ export default {
   data: () => ({
     email: '',
     password: '',
+    loading: false,
     emailDirty: {
       state: false,
       message: ''
@@ -59,6 +62,7 @@ export default {
   },
   methods: {
     async login() {
+      this.loading = true
       try {
         const { data } = await this.$axios.post('/auth/login', {
           email: this.email,
@@ -86,6 +90,8 @@ export default {
             message: 'Senha incorreta'
           }
         }
+      } finally {
+        this.loading = false
       }
     }
   }
@@ -94,7 +100,6 @@ export default {
 
 <style lang="scss" scoped>
 .container {
-  min-height: 100vh;
   @media (min-width: 600px) {
     max-width: 600px;
     margin: 0 auto;
@@ -118,9 +123,7 @@ export default {
   }
 
   .form {
-    margin-top: 2rem;
-    position: relative;
-    flex-grow: 1;
+    margin-top: 1rem;
     label {
       color: $foreground;
       font-size: 1.5rem;
@@ -146,6 +149,7 @@ export default {
       }
       &.dirty {
         border-color: $danger;
+        margin-bottom: 5px;
         &::placeholder {
           color: $danger;
         }
@@ -158,9 +162,7 @@ export default {
 
     button {
       height: 2.25rem;
-      position: absolute;
-      bottom: 10px;
-      left: 0;
+      margin-top: 2rem;
       width: 100%;
       border: transparent;
       border-radius: 7px;
