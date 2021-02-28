@@ -1,0 +1,21 @@
+@import '../definitions/colors.scss';
+
+.is-red {
+  color: $danger;
+}
+
+.is-green {
+  color: $accent;
+}
+
+.is-blue {
+  color: $blue;
+}
+
+.is-pink {
+  color: $pink;
+}
+
+.is-dark {
+  color: $background;
+}
