@@ -1,11 +1,13 @@
 <template>
   <div class="container">
     <h1 class="title">Lista de Clientes</h1>
-    <div class="card-list flex flex-column">
-      <Card v-for="user in users" :key="user.cpf">
-        <div class="profile flex center flex-row vertical-center">
-          <h1 class="is-dark">{{ user.name | splitInitials }}</h1>
-        </div>
+    <div v-if="!loading" class="card-list flex flex-column">
+      <Card
+        v-for="user in users"
+        :key="user.cpf"
+        @click.native="$router.push(`/admin/client/${user._id}`)"
+      >
+        <ProfileCircle :name="user.name" />
         <div class="details">
           <p>{{ user.name }}</p>
           <p>
@@ -44,19 +46,14 @@
 <script>
 import Card from '@/components/Card.vue'
 import AdminNav from '@/components/AdminNav.vue'
+import ProfileCircle from '@/components/ProfileCircle.vue'
 export default {
   name: 'Clients',
-  components: { Card, AdminNav },
+  components: { Card, AdminNav, ProfileCircle },
   data: () => ({
     users: [],
     loading: true
   }),
-  filters: {
-    splitInitials(name) {
-      const splitted = name.split(' ')
-      return splitted[0].charAt(0) + splitted[1].charAt(0)
-    }
-  },
   async mounted() {
     try {
       const {
@@ -66,6 +63,8 @@ export default {
       this.users = users
     } catch (error) {
       console.error(error)
+    } finally {
+      this.loading = false
     }
   }
 }
@@ -83,13 +82,6 @@ export default {
 .card-list {
   align-items: center;
 }
-.profile {
-  width: 90px;
-  height: 90px;
-  background: $primary;
-  border-radius: 50%;
-}
-
 .details {
   margin-left: 1rem;
   flex-grow: 1;
