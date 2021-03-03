@@ -46,7 +46,8 @@
         </div>
       </Card>
     </div>
-    <admin-nav tab-active="clients" />
+
+    <admin-nav tab-active="clients" :class="{ leave: 'leave-anim' }" />
   </div>
 </template>
 
@@ -54,6 +55,7 @@
 import AdminNav from '@/components/AdminNav.vue'
 import ProfileCircle from '@/components/ProfileCircle.vue'
 import Card from '@/components/Card.vue'
+
 export default {
   name: 'ClientDetails',
   components: { AdminNav, Card, ProfileCircle },
@@ -91,24 +93,34 @@ export default {
     margin: 0 auto;
   }
   .profile {
-    margin-top: 1rem;
+    margin-top: 5px;
     text-align: center;
     align-items: center;
     justify-content: center;
     flex-direction: column;
     h3 {
       margin-bottom: 0;
+      margin-top: 0;
       padding-bottom: 0;
       font-weight: lighter;
     }
     p {
       margin: 0;
+      margin-bottom: 5px;
       color: rgba($color: $foreground, $alpha: 0.75);
     }
   }
   .card-list {
     align-items: center;
     justify-content: center;
+    /deep/.card {
+      margin: 5px 0;
+      height: 90px;
+      padding: 0 10px;
+      &:last-of-type {
+        margin-bottom: 150px;
+      }
+    }
     .fund-details {
       display: flex;
       justify-content: space-around;
@@ -122,6 +134,34 @@ export default {
           margin: 0;
         }
       }
+    }
+  }
+}
+/deep/.nav-item {
+  &:nth-of-type(2) {
+    animation: spaceRight ease 0.3s;
+    padding-right: 25px;
+  }
+  &:nth-of-type(3) {
+    animation: spaceLeft ease 0.3s;
+    padding-left: 25px;
+  }
+
+  @keyframes spaceRight {
+    from {
+      padding-right: 0;
+    }
+    to {
+      padding-right: 25px;
+    }
+  }
+
+  @keyframes spaceLeft {
+    from {
+      padding-left: 0;
+    }
+    to {
+      padding-left: 25px;
     }
   }
 }

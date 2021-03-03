@@ -39,7 +39,7 @@
         </div>
       </Card>
     </div>
-    <admin-nav tab-active="clients"></admin-nav>
+    <admin-nav tab-active="clients" :class="{ 'anim-enter': isPrevClient }" />
   </div>
 </template>
 
@@ -52,7 +52,8 @@ export default {
   components: { Card, AdminNav, ProfileCircle },
   data: () => ({
     users: [],
-    loading: true
+    loading: true,
+    isPrevClient: false
   }),
   async mounted() {
     try {
@@ -66,6 +67,17 @@ export default {
     } finally {
       this.loading = false
     }
+  },
+  methods: {
+    setPrev(prev) {
+      this.isPrevClient = prev
+    }
+  },
+  beforeRouteEnter(_to, from, next) {
+    if (from.name === 'Client Details') {
+      next(vm => vm.setPrev(true))
+    }
+    next()
   }
 }
 </script>
@@ -99,6 +111,35 @@ export default {
     width: 100%;
     p {
       font-size: 14px;
+    }
+  }
+}
+
+.anim-enter {
+  /deep/.nav-item {
+    &:nth-of-type(2) {
+      animation: spaceRight ease 0.3s;
+    }
+    &:nth-of-type(3) {
+      animation: spaceLeft ease 0.3s;
+    }
+
+    @keyframes spaceRight {
+      from {
+        padding-right: 25px;
+      }
+      to {
+        padding-right: 0;
+      }
+    }
+
+    @keyframes spaceLeft {
+      from {
+        padding-left: 0;
+      }
+      to {
+        padding-left: 0;
+      }
     }
   }
 }

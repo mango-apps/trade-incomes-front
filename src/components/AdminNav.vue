@@ -1,5 +1,5 @@
 <template>
-  <nav class="nav">
+  <div class="nav">
     <router-link
       to="/admin/clients"
       :class="[
@@ -10,27 +10,38 @@
       <uil-list-ul size="30px" />
       Clientes
     </router-link>
-    <div class="nav-item flex flex-column">
+    <router-link to="/admin/clients" class="nav-item flex flex-column">
       <uil-money-withdrawal size="30px" /> Saques
+    </router-link>
+    <router-link to="/admin/clients" class="nav-item flex flex-column">
+      <uil-user-plus size="30px" /> Cliente
+    </router-link>
+    <router-link to="/admin/clients" class="nav-item flex flex-column">
+      <uil-setting size="30px" /> Configs
+    </router-link>
+
+    <div v-if="$route.name === 'Client Details'" class="add-funds">
+      <uil-panel-add size="20px" />
     </div>
-    <div class="nav-item flex flex-column">
-      <uil-user-plus size="30px" /> Registrar Cliente
-    </div>
-  </nav>
+  </div>
 </template>
 
 <script>
 import {
   UilListUl,
   UilMoneyWithdrawal,
-  UilUserPlus
+  UilUserPlus,
+  UilSetting,
+  UilPanelAdd
 } from '@iconscout/vue-unicons'
 export default {
   name: 'AdminNav',
   components: {
     UilListUl,
     UilMoneyWithdrawal,
-    UilUserPlus
+    UilUserPlus,
+    UilSetting,
+    UilPanelAdd
   },
   props: {
     tabActive: {
@@ -74,6 +85,45 @@ export default {
     &.active {
       color: $accent;
     }
+  }
+
+  .add-funds {
+    background: $accent;
+    width: 50px;
+    height: 50px;
+    position: fixed;
+    z-index: 2;
+    bottom: 35px;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: rgba($color: #000000, $alpha: 0.24) 0 3px 6px;
+    color: $background;
+    border: 5px solid $background;
+    animation: grow 0.3s ease;
+  }
+}
+
+@keyframes grow {
+  0% {
+    width: 0;
+    height: 0;
+    transform: translateY(-50px);
+  }
+  25% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-25px);
+  }
+  100% {
+    height: 50px;
+    width: 50px;
+    transform: translateY(0px);
   }
 }
 </style>
