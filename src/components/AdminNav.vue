@@ -1,10 +1,13 @@
 <template>
-  <div class="nav">
+  <div :class="['nav', { 'has-add-button': $route.name === 'Client Details' }]">
     <router-link
       to="/admin/clients"
       :class="[
         'nav-item flex flex-column',
-        { active: tabActive === 'clients' }
+        {
+          active:
+            $route.name === 'Client List' || $route.name === 'Client Details'
+        }
       ]"
     >
       <uil-list-ul size="30px" />
@@ -20,9 +23,11 @@
       <uil-setting size="30px" /> Configs
     </router-link>
 
-    <div v-if="$route.name === 'Client Details'" class="add-funds">
-      <uil-panel-add size="20px" />
-    </div>
+    <transition name="jump">
+      <div v-if="$route.name === 'Client Details'" class="add-funds">
+        <uil-panel-add size="20px" />
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -42,12 +47,6 @@ export default {
     UilUserPlus,
     UilSetting,
     UilPanelAdd
-  },
-  props: {
-    tabActive: {
-      type: String,
-      required: true
-    }
   }
 }
 </script>
@@ -70,7 +69,20 @@ export default {
   justify-content: space-around;
   align-items: center;
 
+  &.has-add-button {
+    .nav-item {
+      transition: all 0.3s ease;
+      &:nth-of-type(2) {
+        padding-right: 25px;
+      }
+      &:nth-of-type(3) {
+        padding-left: 25px;
+      }
+    }
+  }
+
   .nav-item {
+    transition: all 0.3s ease;
     flex: 1;
     color: $dark-grey;
     font-family: 'Saira', sans-serif;
@@ -104,26 +116,29 @@ export default {
     box-shadow: rgba($color: #000000, $alpha: 0.24) 0 3px 6px;
     color: $background;
     border: 5px solid $background;
-    animation: grow 0.3s ease;
   }
-}
+  @keyframes jump {
+    0% {
+      opacity: 0;
+      transform: translateY(-25px) scale(0.7, 1.3);
+    }
 
-@keyframes grow {
-  0% {
-    width: 0;
-    height: 0;
-    transform: translateY(-50px);
+    50% {
+      transform: translateY(-5px) scale(1.1, 0.9);
+    }
+    100% {
+      height: 50px;
+      width: 50px;
+      transform: translateY(0px) scale(1, 1);
+    }
   }
-  25% {
-    transform: translateY(0px);
+
+  .jump-enter-active {
+    animation: jump 0.3s ease-in-out;
   }
-  50% {
-    transform: translateY(-25px);
-  }
-  100% {
-    height: 50px;
-    width: 50px;
-    transform: translateY(0px);
+
+  .jump-leave-active {
+    animation: jump 0.3s ease-in-out reverse;
   }
 }
 </style>

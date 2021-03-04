@@ -39,17 +39,15 @@
         </div>
       </Card>
     </div>
-    <admin-nav tab-active="clients" :class="{ 'anim-enter': isPrevClient }" />
   </div>
 </template>
 
 <script>
-import Card from '@/components/Card.vue'
-import AdminNav from '@/components/AdminNav.vue'
 import ProfileCircle from '@/components/ProfileCircle.vue'
+import Card from '@/components/Card.vue'
 export default {
   name: 'Clients',
-  components: { Card, AdminNav, ProfileCircle },
+  components: { ProfileCircle, Card },
   data: () => ({
     users: [],
     loading: true,

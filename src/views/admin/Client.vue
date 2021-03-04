@@ -46,19 +46,16 @@
         </div>
       </Card>
     </div>
-
-    <admin-nav tab-active="clients" :class="{ leave: 'leave-anim' }" />
   </div>
 </template>
 
 <script>
-import AdminNav from '@/components/AdminNav.vue'
 import ProfileCircle from '@/components/ProfileCircle.vue'
 import Card from '@/components/Card.vue'
 
 export default {
   name: 'ClientDetails',
-  components: { AdminNav, Card, ProfileCircle },
+  components: { Card, ProfileCircle },
   data: () => ({
     user: null,
     funds: [],

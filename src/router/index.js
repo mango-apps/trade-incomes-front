@@ -12,15 +12,23 @@ const routes = [
     component: Login
   },
   {
-    path: '/admin/clients',
-    name: 'Client List',
-    component: () => import('../views/admin/Clients.vue'),
-    meta: { adminAuth: true }
-  },
-  {
-    path: '/admin/client/:id',
-    name: 'Client Details',
-    component: () => import('../views/admin/Client.vue')
+    path: '/admin',
+    name: 'Admin View',
+    component: () => import('../templates/AdminView.vue'),
+    children: [
+      {
+        path: 'clients',
+        name: 'Client List',
+        component: () => import('../views/admin/Clients.vue'),
+        meta: { adminAuth: true }
+      },
+      {
+        path: 'client/:id',
+        name: 'Client Details',
+        component: () => import('../views/admin/Client.vue'),
+        meta: { adminAuth: true }
+      }
+    ]
   }
 ]
 
