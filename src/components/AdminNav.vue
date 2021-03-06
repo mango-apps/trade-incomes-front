@@ -24,7 +24,11 @@
     </router-link>
 
     <transition name="jump">
-      <div v-if="$route.name === 'Client Details'" class="add-funds">
+      <div
+        v-if="$route.name === 'Client Details'"
+        class="add-funds"
+        @click="setAddFundsModal(true)"
+      >
         <uil-panel-add size="20px" />
       </div>
     </transition>
@@ -39,6 +43,7 @@ import {
   UilSetting,
   UilPanelAdd
 } from '@iconscout/vue-unicons'
+import { mapMutations } from 'vuex'
 export default {
   name: 'AdminNav',
   components: {
@@ -47,6 +52,9 @@ export default {
     UilUserPlus,
     UilSetting,
     UilPanelAdd
+  },
+  methods: {
+    ...mapMutations(['setAddFundsModal'])
   }
 }
 </script>
