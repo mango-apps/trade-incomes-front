@@ -7,7 +7,11 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     token: '',
-    isAdmin: false
+    isAdmin: false,
+    isAddFundsModalOpen: false
+  },
+  getters: {
+    isAddFundsModalOpen: ({ isAddFundsModalOpen }) => isAddFundsModalOpen
   },
   mutations: {
     setToken(state, param) {
@@ -15,9 +19,12 @@ export default new Vuex.Store({
     },
     setIsAdmin(state, param) {
       state.isAdmin = param
+    },
+    setAddFundsModal(state, param) {
+      state.isAddFundsModalOpen = param
     }
   },
   actions: {},
   modules: {},
-  plugins: [createPersistedState()]
+  plugins: [createPersistedState({ paths: ['token', 'isAdmin'] })]
 })
