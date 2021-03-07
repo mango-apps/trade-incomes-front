@@ -60,7 +60,7 @@
           placeholder="R$ 4.000,00"
         />
         <label class="label" for="gain">Ganho:</label>
-        <input id="invest" type="text" class="gain" placeholder="R$ 1.000,00" />
+        <input id="gain" type="text" class="input" placeholder="R$ 1.000,00" />
       </template>
 
       <template v-slot:footer>
