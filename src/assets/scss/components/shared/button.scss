@@ -1,0 +1,21 @@
+.button {
+  &__primary {
+    background: $accent;
+    color: $darker;
+    border: none;
+    font-weight: bold;
+    width: 100px;
+    height: 35px;
+    border-radius: 5px;
+    font-size: 1rem;
+  }
+
+  &__ghost,
+  &__danger {
+    font-size: 1rem;
+    border: none;
+    background: transparent;
+    color: $danger;
+    font-weight: bold;
+  }
+}
