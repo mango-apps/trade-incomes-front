@@ -55,12 +55,26 @@
         <label class="label" for="invest">Investimento:</label>
         <input
           id="invest"
-          type="text"
-          class="input"
+          type="number"
           placeholder="R$ 4.000,00"
+          v-model="invested"
+          :class="['input', { dirty: investedDirty.state }]"
         />
+        <span class="is-red" v-if="investedDirty.state">{{
+          investedDirty.message
+        }}</span>
         <label class="label" for="gain">Ganho:</label>
-        <input id="gain" type="text" class="input" placeholder="R$ 1.000,00" />
+        <input
+          id="gain"
+          type="number"
+          class="input"
+          placeholder="R$ 1.000,00"
+          v-model="gained"
+          :class="{ dirty: gainedDirty.state }"
+        />
+        <span class="is-red" v-if="gainedDirty.state">{{
+          gainedDirty.message
+        }}</span>
       </template>
 
       <template v-slot:footer>
@@ -71,7 +85,7 @@
           >
             Cancelar
           </button>
-          <button class="button button__primary" @click="() => {}">
+          <button class="button button__primary" @click="insterFunds">
             Salvar
           </button>
         </div>
@@ -91,6 +105,16 @@ export default {
   data: () => ({
     user: null,
     funds: [],
+    invested: null,
+    investedDirty: {
+      state: false,
+      message: ''
+    },
+    gained: null,
+    gainedDirty: {
+      state: false,
+      message: ''
+    },
     loading: true
   }),
   async created() {
@@ -111,8 +135,44 @@ export default {
       this.loading = false
     }
   },
+  watch: {
+    gained() {
+      this.gainedDirty.state = false
+    },
+    invested() {
+      this.investedDirty.state = false
+    }
+  },
   methods: {
-    ...mapMutations(['setAddFundsModal'])
+    ...mapMutations(['setAddFundsModal']),
+    async insterFunds() {
+      if (!this.invested) {
+        this.investedDirty.state = true
+        this.investedDirty.message = 'O investimento não pode ser vazio'
+      } else if (!this.gained) {
+        this.gainedDirty.state = true
+        this.gainedDirty.message = 'O ganho não pode ser vazio'
+      } else {
+        try {
+          const payload = {
+            email: this.user.email,
+            invested: this.invested,
+            gained: this.gained
+          }
+
+          const { data } = await this.$axios.post('/manager/funds', {
+            ...payload
+          })
+
+          if (data.fund) {
+            this.setAddFundsModal(false)
+            this.$router.go()
+          }
+        } catch (e) {
+          this.setAddFundsModal(false)
+        }
+      }
+    }
   }
 }
 </script>
