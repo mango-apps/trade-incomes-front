@@ -51,7 +51,22 @@
         <h1>Adicionar Fundos</h1>
       </template>
 
-      <template v-slot:body> </template>
+      <template v-slot:body>
+        <label class="label" for="invest">Investimento:</label>
+        <input
+          id="invest"
+          type="text"
+          class="input"
+          placeholder="R$ 4.000,00"
+        />
+        <label class="label" for="invest">Ganho:</label>
+        <input
+          id="invest"
+          type="text"
+          class="input"
+          placeholder="R$ 1.000,00"
+        />
+      </template>
 
       <template v-slot:footer>
         <div>
