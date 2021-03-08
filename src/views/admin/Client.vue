@@ -60,9 +60,9 @@
           v-model="invested"
           :class="['input', { dirty: investedDirty.state }]"
         />
-        <span class="is-red" v-if="investedDirty.state">{{
-          investedDirty.message
-        }}</span>
+        <span class="is-red" v-if="investedDirty.state">
+          {{ investedDirty.message }}
+        </span>
         <label class="label" for="gain">Ganho:</label>
         <input
           id="gain"
@@ -72,16 +72,16 @@
           v-model="gained"
           :class="{ dirty: gainedDirty.state }"
         />
-        <span class="is-red" v-if="gainedDirty.state">{{
-          gainedDirty.message
-        }}</span>
+        <span class="is-red" v-if="gainedDirty.state">
+          {{ gainedDirty.message }}
+        </span>
       </template>
 
       <template v-slot:footer>
         <div>
           <button
             class="button button__ghost button__danger"
-            @click="setAddFundsModal(false)"
+            @click="closeModal"
           >
             Cancelar
           </button>
@@ -212,7 +212,15 @@ export default {
         }
       } catch (e) {
         this.setAddFundsModal(false)
+      } finally {
+        this.gained = null
+        this.investedDirty = null
       }
+    },
+    closeModal() {
+      this.setAddFundsModal(false)
+      this.gained = null
+      this.invested = null
     }
   }
 }
