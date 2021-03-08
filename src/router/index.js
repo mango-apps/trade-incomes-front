@@ -27,6 +27,12 @@ const routes = [
         name: 'Client Details',
         component: () => import('../views/admin/Client.vue'),
         meta: { adminAuth: true }
+      },
+      {
+        path: 'register',
+        name: 'Client Register',
+        component: () => import('../views/admin/RegisterNewClient.vue'),
+        meta: { adminAuth: true }
       }
     ]
   }

@@ -16,7 +16,15 @@
     <router-link to="/admin/clients" class="nav-item flex flex-column">
       <uil-money-withdrawal size="30px" /> Saques
     </router-link>
-    <router-link to="/admin/clients" class="nav-item flex flex-column">
+    <router-link
+      to="/admin/register"
+      :class="[
+        'nav-item flex flex-column',
+        {
+          active: $route.name === 'Client Register'
+        }
+      ]"
+    >
       <uil-user-plus size="30px" /> Cliente
     </router-link>
     <router-link to="/admin/clients" class="nav-item flex flex-column">
