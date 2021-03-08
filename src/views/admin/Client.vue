@@ -8,7 +8,7 @@
     </div>
     <div class="card-list flex flex-column">
       <Card v-for="fund in funds" :key="fund._id">
-        <div class="fund-details">
+        <div class="fund-details" @click="openFund(fund)">
           <div>
             <p class="bold fund-title">
               Fundo:
@@ -48,7 +48,7 @@
     </div>
     <modal ref="add-funds">
       <template v-slot:header>
-        <h1>Adicionar Fundos</h1>
+        <h1>{{ isEdit ? 'Editar Fundos' : 'Adicionar Fundos' }}</h1>
       </template>
 
       <template v-slot:body>
@@ -85,7 +85,14 @@
           >
             Cancelar
           </button>
-          <button class="button button__primary" @click="insterFunds">
+          <button
+            v-if="!isEdit"
+            class="button button__primary"
+            @click="insterFunds"
+          >
+            Salvar
+          </button>
+          <button v-else class="button button__primary" @click="updateFund">
             Salvar
           </button>
         </div>
@@ -105,6 +112,8 @@ export default {
   data: () => ({
     user: null,
     funds: [],
+    isEdit: false,
+    fundIDToEdit: '',
     invested: null,
     investedDirty: {
       state: false,
@@ -118,22 +127,7 @@ export default {
     loading: true
   }),
   async created() {
-    try {
-      const { data } = await this.$axios.get(
-        `/manager/user/${this.$route.params.id}`
-      )
-      this.user = data.user
-
-      const { data: fundsData } = await this.$axios.get(
-        `/manager/user-funds/${this.$route.params.id}`
-      )
-      console.log(fundsData)
-      this.funds = fundsData.funds
-    } catch (error) {
-      console.log(error)
-    } finally {
-      this.loading = false
-    }
+    this.fetchFunds()
   },
   watch: {
     gained() {
@@ -145,6 +139,24 @@ export default {
   },
   methods: {
     ...mapMutations(['setAddFundsModal']),
+    async fetchFunds() {
+      try {
+        const { data } = await this.$axios.get(
+          `/manager/user/${this.$route.params.id}`
+        )
+        this.user = data.user
+
+        const { data: fundsData } = await this.$axios.get(
+          `/manager/user-funds/${this.$route.params.id}`
+        )
+        console.log(fundsData)
+        this.funds = fundsData.funds
+      } catch (error) {
+        console.log(error)
+      } finally {
+        this.loading = false
+      }
+    },
     async insterFunds() {
       if (!this.invested) {
         this.investedDirty.state = true
@@ -165,12 +177,41 @@ export default {
           })
 
           if (data.fund) {
+            this.isEdit = false
             this.setAddFundsModal(false)
-            this.$router.go()
+            this.fetchFunds()
           }
         } catch (e) {
+          this.isEdit = false
           this.setAddFundsModal(false)
         }
+      }
+    },
+    openFund(fund) {
+      this.gained = fund.gained
+      this.invested = fund.invested
+      this.fundIDToEdit = fund._id
+      this.isEdit = true
+      this.setAddFundsModal(true)
+    },
+    async updateFund() {
+      const payload = {
+        id: this.fundIDToEdit,
+        gained: this.gained,
+        invested: this.invested
+      }
+
+      try {
+        const { data } = await this.$axios.patch('/manager/funds', {
+          ...payload
+        })
+
+        if (data.message) {
+          this.fetchFunds()
+          this.setAddFundsModal(false)
+        }
+      } catch (e) {
+        this.setAddFundsModal(false)
       }
     }
   }
