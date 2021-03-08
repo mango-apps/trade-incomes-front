@@ -40,7 +40,7 @@
               Ganho:
             </p>
             <span class="is-blue">
-              {{ (fund.gained / fund.invested) * 100 }}%
+              {{ ((fund.gained / fund.invested) * 100 - 100).toFixed(1) }}%
             </span>
           </div>
         </div>
