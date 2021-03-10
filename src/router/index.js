@@ -46,6 +46,12 @@ const routes = [
         name: 'Client Investments',
         component: () => import('../views/user/Investments.vue'),
         meta: { userAuth: true }
+      },
+      {
+        path: 'settings',
+        name: 'Client Settings',
+        component: () => import('../views/user/Settings.vue'),
+        meta: { userAuth: true }
       }
     ]
   }
