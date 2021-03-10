@@ -1,5 +1,5 @@
 <template>
-  <div :class="['nav', { 'has-add-button': $route.name === 'Client Details' }]">
+  <div class="nav">
     <router-link
       to="/user/investments"
       :class="[
@@ -14,12 +14,21 @@
       <uil-chart size="30px" />
       Rendimentos
     </router-link>
-    <router-link to="/admin/clients" class="nav-item flex flex-column">
+
+    <router-link to="/user/withdrawals" class="nav-item flex flex-column">
       <uil-money-withdraw size="30px" /> Saques
     </router-link>
 
-    <router-link to="/admin/clients" class="nav-item flex flex-column">
-      <uil-setting size="30px" /> Configs
+    <router-link
+      to="/user/settings"
+      :class="[
+        'nav-item flex flex-column',
+        {
+          active: $route.name === 'Client Settings'
+        }
+      ]"
+    >
+      <uil-setting size="30px" /> Configurações
     </router-link>
 
     <transition name="jump">
