@@ -80,6 +80,8 @@ export default {
 
         if (data.admin) {
           this.$router.push('/admin/clients')
+        } else {
+          this.$router.push('/user/investments')
         }
       } catch ({ response: { data } }) {
         if (data.error === 'Email is malformatted' && this.email === '') {
