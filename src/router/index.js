@@ -35,6 +35,19 @@ const routes = [
         meta: { adminAuth: true }
       }
     ]
+  },
+  {
+    path: '/user',
+    name: 'User View',
+    component: () => import('../templates/UserView.vue'),
+    children: [
+      {
+        path: 'investments',
+        name: 'Client Investments',
+        component: () => import('../views/user/Investments.vue'),
+        meta: { userAuth: true }
+      }
+    ]
   }
 ]
 
@@ -49,8 +62,12 @@ router.beforeEach((to, _from, next) => {
     store.state.isAdmin ? next() : next('/')
   }
 
+  if (to.meta.userAuth) {
+    store.state.token && !store.state.isAdmin ? next() : next('/')
+  }
+
   if (to.name === 'Login' && store.state.token !== '') {
-    store.state.isAdmin ? next('/admin/clients') : next('/')
+    store.state.isAdmin ? next('/admin/clients') : next('/user/investments')
   }
 
   next()
