@@ -62,6 +62,9 @@ export default {
     z-index: 1;
   }
   &__dialog {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
     background-color: $darker;
     border: 2px solid $dark;
     position: relative;
