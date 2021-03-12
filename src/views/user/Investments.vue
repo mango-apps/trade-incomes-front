@@ -90,7 +90,14 @@
         <h1 class="title fs-medium">Como deseja receber?</h1>
       </template>
       <template v-slot:body>
-        <label class="label" for="gain">Valor do saque:</label>
+        <div class="flex flex-row vertical-center">
+          <label for="pix" class="label">PIX: </label>
+          <input type="radio" id="pix" value="PIX" v-model="paymentMethod" />
+        </div>
+        <div class="flex flex-row vertical-center">
+          <label for="ted" class="label">TED: </label>
+          <input type="radio" id="ted" value="TED" v-model="paymentMethod" />
+        </div>
       </template>
       <template v-slot:footer>
         <div>
@@ -100,7 +107,7 @@
           >
             Cancelar
           </button>
-          <button class="button button__primary">
+          <button class="button button__primary" @click="savePaymentMethod">
             Salvar
           </button>
         </div>
@@ -122,6 +129,7 @@ export default {
     balance: 0,
     widthdrawValue: null,
     balanceDirty: null,
+    paymentMethod: null,
     step: 1
   }),
 
@@ -148,6 +156,12 @@ export default {
         setTimeout(() => {
           this.setAddFundsModal(true)
         }, 300)
+      }
+    },
+    savePaymentMethod() {
+      if (this.paymentMethod) {
+        this.setAddFundsModal(false)
+        this.step++
       }
     }
   },
@@ -209,6 +223,14 @@ export default {
     margin-top: 5px;
     font-weight: normal;
     font-size: 12px;
+  }
+  input[type='radio'] {
+    width: 25px;
+    height: 25px;
+    margin-left: 15px;
+    &:hover {
+      background-color: red;
+    }
   }
 }
 </style>
