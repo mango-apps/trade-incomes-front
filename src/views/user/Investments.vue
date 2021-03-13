@@ -38,6 +38,13 @@
               {{ ((fund.gained / fund.invested) * 100 - 100).toFixed(1) }}%
             </span>
           </div>
+          <div
+            v-if="fund.status !== 0"
+            :class="[
+              'fund__status',
+              { fund__status__pendent: fund.status === 1 }
+            ]"
+          ></div>
         </div>
       </Card>
     </div>
@@ -136,8 +143,8 @@
           >
             Cancelar
           </button>
-          <button class="button button__primary" @click="() => {}">
-            Salvar
+          <button class="button button__primary" @click="checkOut">
+            Finalizar
           </button>
         </div>
       </template>
@@ -147,12 +154,34 @@
         <h1 class="title fs-medium">Insira os dados para a TED</h1>
       </template>
       <template v-slot:body>
-        <label class="label" for="pixKey">Banco:</label>
-        <select class="input" name="bank" id="bank">
-          <option v-for="bank in banks" :key="bank.code" :value="bank.Code">
+        <label class="label" for="bank">Banco:</label>
+        <select class="input" name="bank" id="bank" v-model="bankCode">
+          <option
+            v-for="bank in banks"
+            :key="bank.code"
+            :value="`${bank.Code} - ${bank.Name}`"
+          >
             {{ bank.Code }} - {{ bank.Name }}
           </option>
         </select>
+        <label class="label" for="agency">Agência:</label>
+        <input
+          id="agency"
+          name="agency"
+          type="text"
+          class="input"
+          placeholder="071-9"
+          v-model="bankAgency"
+        />
+        <label class="label" for="agency">Conta:</label>
+        <input
+          id="account"
+          name="account"
+          type="text"
+          class="input"
+          placeholder="78910-2"
+          v-model="bankAccount"
+        />
       </template>
       <template v-slot:footer>
         <div>
@@ -162,8 +191,8 @@
           >
             Cancelar
           </button>
-          <button class="button button__primary" @click="() => {}">
-            Salvar
+          <button class="button button__primary" @click="checkOut">
+            Finalizar
           </button>
         </div>
       </template>
@@ -182,20 +211,38 @@ export default {
   data: () => ({
     funds: [],
     balance: 0,
+    idFund: null,
     widthdrawValue: null,
     balanceDirty: null,
     paymentMethod: null,
     pixKey: null,
     pixKeyDirty: null,
     banks: Banks,
+    bankCode: null,
+    bankAgency: null,
+    bankAccount: null,
     step: 1
   }),
 
   methods: {
     ...mapMutations(['setAddFundsModal']),
+    async fetchFunds() {
+      try {
+        const { data } = await this.$axios.get('/user/funds')
+        if (data.funds.length) {
+          this.funds = data.funds
+        }
+      } catch (e) {
+        console.error(e)
+      }
+    },
+
     openModal(fund) {
-      this.balance = fund.gained
-      this.setAddFundsModal(true)
+      if (fund.status === 0) {
+        this.balance = fund.gained
+        this.idFund = fund._id
+        this.setAddFundsModal(true)
+      }
     },
 
     closeModal() {
@@ -216,6 +263,7 @@ export default {
         }, 300)
       }
     },
+
     savePaymentMethod() {
       if (this.paymentMethod) {
         this.setAddFundsModal(false)
@@ -224,19 +272,27 @@ export default {
           this.setAddFundsModal(true)
         }, 300)
       }
+    },
+
+    async checkOut() {
+      const res = await this.$axios.post('/user/withdraw', {
+        idFund: this.idFund,
+        value: this.widthdrawValue,
+        method: this.paymentMethod,
+        pixKey: this.pixKey,
+        bankCode: this.bankCode,
+        bankAgency: this.bankAgency,
+        bankAccount: this.bankAccount
+      })
+      if (res.statusText === 'OK') {
+        this.closeModal()
+        this.fetchFunds()
+      }
     }
   },
 
-  async created() {
-    console.log(Banks)
-    try {
-      const { data } = await this.$axios.get('/user/funds')
-      if (data.funds.length) {
-        this.funds = data.funds
-      }
-    } catch (e) {
-      console.error(e)
-    }
+  created() {
+    this.fetchFunds()
   }
 }
 </script>
@@ -252,11 +308,22 @@ export default {
     align-items: center;
     justify-content: center;
     /deep/.card {
+      position: relative;
       margin: 5px 0;
       height: 90px;
       padding: 0 10px;
       &:last-of-type {
         margin-bottom: 150px;
+      }
+      .fund__status {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        border-radius: 50%;
+        padding: 8px;
+        &__pendent {
+          background-color: $warning;
+        }
       }
     }
     .fund-details {
