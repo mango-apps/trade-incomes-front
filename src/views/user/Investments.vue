@@ -145,7 +145,7 @@
             Cancelar
           </button>
           <button class="button button__primary" @click="checkOut">
-            Finalizar
+            {{ loading ? 'Salvando...' : 'Salvar' }}
           </button>
         </div>
       </template>
@@ -193,7 +193,7 @@
             Cancelar
           </button>
           <button class="button button__primary" @click="checkOut">
-            Finalizar
+            {{ loading ? 'Salvando...' : 'Salvar' }}
           </button>
         </div>
       </template>
@@ -210,6 +210,7 @@ export default {
   components: { Card, Modal },
 
   data: () => ({
+    loading: false,
     funds: [],
     balance: 0,
     idFund: null,
@@ -277,6 +278,7 @@ export default {
     },
 
     async checkOut() {
+      this.loading = true
       const res = await this.$axios.post('/user/withdraw', {
         idFund: this.idFund,
         value: this.widthdrawValue,
@@ -289,6 +291,7 @@ export default {
       if (res.statusText === 'OK') {
         this.closeModal()
         this.fetchFunds()
+        this.loading = false
       }
     }
   },
