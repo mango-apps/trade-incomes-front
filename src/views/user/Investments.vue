@@ -279,7 +279,7 @@ export default {
 
     async checkOut() {
       this.loading = true
-      const res = await this.$axios.post('/user/withdraw', {
+      const { data } = await this.$axios.post('/user/withdraw', {
         idFund: this.idFund,
         value: this.widthdrawValue,
         method: this.paymentMethod,
@@ -288,7 +288,7 @@ export default {
         bankAgency: this.bankAgency,
         bankAccount: this.bankAccount
       })
-      if (res.statusText === 'OK') {
+      if (data.withdraw) {
         this.closeModal()
         this.fetchFunds()
         this.loading = false
