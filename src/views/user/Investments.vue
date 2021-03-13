@@ -74,6 +74,7 @@
           v-model="widthdrawValue"
           :class="{ dirty: balanceDirty }"
         />
+        <span class="is-red" v-if="balanceDirty">{{ balanceDirty }}</span>
         <h6 class="balance__warn">
           O seu depósito será realizado em até 2 dias úteis.
         </h6>
@@ -249,6 +250,7 @@ export default {
       this.setAddFundsModal(false)
       this.balance = null
       this.widthdrawValue = null
+      this.balanceDirty = null
       this.step = 1
     },
 
