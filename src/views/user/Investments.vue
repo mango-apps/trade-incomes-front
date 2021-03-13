@@ -113,6 +113,61 @@
         </div>
       </template>
     </modal>
+    <modal v-if="step === 3 && paymentMethod === 'PIX'">
+      <template v-slot:header>
+        <h1 class="title fs-medium">Insira sua Chave PIX</h1>
+      </template>
+      <template v-slot:body>
+        <label class="label" for="pixKey">Chave PIX:</label>
+        <input
+          id="pixKey"
+          type="text"
+          class="input"
+          placeholder="Email, telefone ou chave randômica."
+          v-model="pixKey"
+          :class="{ dirty: pixKeyDirty }"
+        />
+      </template>
+      <template v-slot:footer>
+        <div>
+          <button
+            class="button button__ghost button__danger"
+            @click="closeModal"
+          >
+            Cancelar
+          </button>
+          <button class="button button__primary" @click="() => {}">
+            Salvar
+          </button>
+        </div>
+      </template>
+    </modal>
+    <modal v-if="step === 3 && paymentMethod === 'TED'">
+      <template v-slot:header>
+        <h1 class="title fs-medium">Insira os dados para a TED</h1>
+      </template>
+      <template v-slot:body>
+        <label class="label" for="pixKey">Banco:</label>
+        <select class="input" name="bank" id="bank">
+          <option v-for="bank in banks" :key="bank.code" :value="bank.Code">
+            {{ bank.Code }} - {{ bank.Name }}
+          </option>
+        </select>
+      </template>
+      <template v-slot:footer>
+        <div>
+          <button
+            class="button button__ghost button__danger"
+            @click="closeModal"
+          >
+            Cancelar
+          </button>
+          <button class="button button__primary" @click="() => {}">
+            Salvar
+          </button>
+        </div>
+      </template>
+    </modal>
   </div>
 </template>
 
@@ -120,7 +175,7 @@
 import Card from '@/components/Card.vue'
 import Modal from '@/components/Modal.vue'
 import { mapMutations } from 'vuex'
-
+import Banks from '@/utils/Banks.json'
 export default {
   components: { Card, Modal },
 
@@ -130,6 +185,9 @@ export default {
     widthdrawValue: null,
     balanceDirty: null,
     paymentMethod: null,
+    pixKey: null,
+    pixKeyDirty: null,
+    banks: Banks,
     step: 1
   }),
 
@@ -162,11 +220,15 @@ export default {
       if (this.paymentMethod) {
         this.setAddFundsModal(false)
         this.step++
+        setTimeout(() => {
+          this.setAddFundsModal(true)
+        }, 300)
       }
     }
   },
 
   async created() {
+    console.log(Banks)
     try {
       const { data } = await this.$axios.get('/user/funds')
       if (data.funds.length) {
@@ -180,56 +242,69 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.card-list {
-  align-items: center;
-  justify-content: center;
-  /deep/.card {
-    margin: 5px 0;
-    height: 90px;
-    padding: 0 10px;
-    &:last-of-type {
-      margin-bottom: 150px;
-    }
+.container {
+  height: 100%;
+  @media (min-width: 600px) {
+    max-width: 600px;
+    margin: 0 auto;
   }
-  .fund-details {
-    display: flex;
-    justify-content: space-around;
+  .card-list {
     align-items: center;
-    flex: 1;
-    div {
+    justify-content: center;
+    /deep/.card {
+      margin: 5px 0;
+      height: 90px;
+      padding: 0 10px;
+      &:last-of-type {
+        margin-bottom: 150px;
+      }
+    }
+    .fund-details {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
       flex: 1;
-      text-align: center;
-      p {
-        font-size: 1.2rem;
-        margin: 0;
+      div {
+        flex: 1;
+        text-align: center;
+        p {
+          font-size: 1.2rem;
+          margin: 0;
+        }
       }
     }
   }
-}
 
-.modal {
-  .button.button__ghost.button__danger {
-    margin-right: 10px;
-  }
-  .balance__title {
-    font-weight: 400;
-    margin-bottom: 0;
-    padding-bottom: 0;
-  }
-  .balance__value {
-    margin-top: 0.25rem;
-  }
-  .balance__warn {
-    margin-top: 5px;
-    font-weight: normal;
-    font-size: 12px;
-  }
-  input[type='radio'] {
-    width: 25px;
-    height: 25px;
-    margin-left: 15px;
-    &:hover {
-      background-color: red;
+  .modal {
+    .button.button__ghost.button__danger {
+      margin-right: 10px;
+    }
+    .balance__title {
+      font-weight: 400;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    .balance__value {
+      margin-top: 0.25rem;
+    }
+    .balance__warn {
+      margin-top: 5px;
+      font-weight: normal;
+      font-size: 12px;
+    }
+    input[type='radio'] {
+      width: 25px;
+      height: 25px;
+      margin-left: 15px;
+      &:hover {
+        background-color: red;
+      }
+    }
+    select {
+      color: $foreground;
+    }
+    option {
+      color: $background;
     }
   }
 }
