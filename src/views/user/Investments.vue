@@ -206,6 +206,10 @@ import Card from '@/components/Card.vue'
 import Modal from '@/components/Modal.vue'
 import { mapMutations } from 'vuex'
 import Banks from '@/utils/Banks.json'
+
+import fontawesome from '@fortawesome/fontawesome'
+import faSolid from '@fortawesome/fontawesome-free-solid'
+
 export default {
   components: { Card, Modal },
 
@@ -279,18 +283,34 @@ export default {
 
     async checkOut() {
       this.loading = true
-      const { data } = await this.$axios.post('/user/withdraw', {
-        idFund: this.idFund,
-        value: this.widthdrawValue,
-        method: this.paymentMethod,
-        pixKey: this.pixKey,
-        bankCode: this.bankCode,
-        bankAgency: this.bankAgency,
-        bankAccount: this.bankAccount
-      })
-      if (data.withdraw) {
+      try {
+        const { data } = await this.$axios.post('/user/withdraw', {
+          idFund: this.idFund,
+          value: this.widthdrawValue,
+          method: this.paymentMethod,
+          pixKey: this.pixKey,
+          bankCode: this.bankCode,
+          bankAgency: this.bankAgency,
+          bankAccount: this.bankAccount
+        })
+        if (data.withdraw) {
+          this.closeModal()
+          this.fetchFunds()
+        }
+      } catch (e) {
+        this.$toasted.show(
+          `${
+            fontawesome.icon(faSolid.faExclamationTriangle).html
+          } Não foi possível realizar a solicitação`,
+          {
+            duration: 30000,
+            position: 'bottom-center',
+            fullWidth: true,
+            className: 'toasty'
+          }
+        )
         this.closeModal()
-        this.fetchFunds()
+      } finally {
         this.loading = false
       }
     }
@@ -301,6 +321,21 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.toasty {
+  display: flex !important;
+  justify-content: left !important;
+  font-family: 'Quicksand', sans-serif;
+  font-weight: bold !important;
+  text-align: center !important;
+  background-color: $danger !important;
+
+  svg {
+    margin-right: 15px;
+  }
+}
+</style>
 
 <style lang="scss" scoped>
 .container {
