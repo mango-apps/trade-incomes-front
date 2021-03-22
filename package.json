@@ -9,12 +9,16 @@
     "start": "serve dist/"
   },
   "dependencies": {
+    "@fortawesome/fontawesome": "^1.1.8",
+    "@fortawesome/fontawesome-free": "^5.15.3",
+    "@fortawesome/fontawesome-free-solid": "^5.0.13",
     "@iconscout/vue-unicons": "0.0.3",
     "core-js": "^3.9.1",
     "register-service-worker": "^1.7.1",
     "v-mask": "^2.2.4",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0",
+    "vue-toasted": "^1.1.28",
     "vuex": "^3.4.0",
     "vuex-persistedstate": "^4.0.0-beta.3"
   },
