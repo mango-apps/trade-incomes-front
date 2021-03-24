@@ -5,9 +5,7 @@
       :class="[
         'nav-item flex flex-column',
         {
-          active:
-            $route.name === 'Client Investments' ||
-            $route.name === 'Investment Details'
+          active: $route.name === 'Client Investments'
         }
       ]"
     >
@@ -15,7 +13,15 @@
       Rendimentos
     </router-link>
 
-    <router-link to="/user/withdrawals" class="nav-item flex flex-column">
+    <router-link
+      to="/user/withdrawals"
+      :class="[
+        'nav-item flex flex-column',
+        {
+          active: $route.name === 'Client Withdrawals Requests'
+        }
+      ]"
+    >
       <uil-money-withdraw size="30px" /> Saques
     </router-link>
 
