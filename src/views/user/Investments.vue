@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h1 class="title">Meus investimentos</h1>
+    <h1 class="title">Minha Carteira</h1>
     <div class="card-list flex flex-column">
       <Card v-for="fund in funds" :key="fund._id">
         <div class="fund-details" @click="openModal(fund)">
