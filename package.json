@@ -14,6 +14,7 @@
     "@fortawesome/fontawesome-free-solid": "^5.0.13",
     "@iconscout/vue-unicons": "0.0.3",
     "core-js": "^3.9.1",
+    "date-fns": "^2.19.0",
     "register-service-worker": "^1.7.1",
     "v-mask": "^2.2.4",
     "vue": "^2.6.11",
