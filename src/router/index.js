@@ -52,6 +52,12 @@ const routes = [
         name: 'Client Settings',
         component: () => import('../views/user/Settings.vue'),
         meta: { userAuth: true }
+      },
+      {
+        path: 'withdrawals',
+        name: 'Client Withdrawals Requests',
+        component: () => import('../views/user/Withdrawals'),
+        meta: { userAuth: true }
       }
     ]
   }
