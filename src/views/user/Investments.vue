@@ -322,21 +322,6 @@ export default {
 }
 </script>
 
-<style lang="scss">
-.toasty {
-  display: flex !important;
-  justify-content: left !important;
-  font-family: 'Quicksand', sans-serif;
-  font-weight: bold !important;
-  text-align: center !important;
-  background-color: $danger !important;
-
-  svg {
-    margin-right: 15px;
-  }
-}
-</style>
-
 <style lang="scss" scoped>
 .container {
   height: 100%;
