@@ -13,7 +13,15 @@
       <uil-list-ul size="30px" />
       Clientes
     </router-link>
-    <router-link to="/admin/clients" class="nav-item flex flex-column">
+    <router-link
+      to="/admin/withdrawals"
+      :class="[
+        'nav-item flex flex-column',
+        {
+          active: $route.name === 'Withdrawals Requests'
+        }
+      ]"
+    >
       <uil-money-withdrawal size="30px" /> Saques
     </router-link>
     <router-link
