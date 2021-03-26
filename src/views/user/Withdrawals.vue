@@ -4,11 +4,21 @@
     <div class="flex space-between flex-row vertical-center">
       <p>
         Filtrando por:
-        <span :class="['status', { pendent: searchStatus === 0 }]">
-          {{ searchStatus === 0 && 'Pendente' }}
+        <span
+          style="margin-left: 5px"
+          :class="[
+            'status',
+            { pendent: searchStatus === 0 || !searchStatus },
+            { confirmed: searchStatus === 1 }
+          ]"
+        >
+          <span v-if="searchStatus === 0 || !searchStatus" class="is-dark">
+            Pendente
+          </span>
+          <span v-else-if="searchStatus === 1" class="is-dark">Realizado</span>
         </span>
       </p>
-      <div class="filter">
+      <div class="filter" @click="setAddFundsModal(true)">
         <uil-filter size="30px" />
         <p class="is-green">Filtrar</p>
       </div>
@@ -42,19 +52,65 @@
         </div>
       </Card>
     </div>
+    <modal>
+      <template v-slot:header>
+        <h1 class="title fs-medium">Filtrar Solicitações de Saque</h1>
+      </template>
+      <template v-slot:body>
+        <h3 class="lighter">Status do Saque:</h3>
+        <div class="flex flex-row vertical-center">
+          <label for="pendentStatus" class="label">Pendente: </label>
+          <input
+            type="radio"
+            id="pendentStatus"
+            value="0"
+            v-model.number.lazy="searchStatus"
+          />
+        </div>
+        <div class="flex flex-row vertical-center">
+          <label for="confirmedStatus" class="label">Realizado: </label>
+          <input
+            type="radio"
+            id="confirmedStatus"
+            value="1"
+            v-model.number.lazy="searchStatus"
+          />
+        </div>
+      </template>
+      <template v-slot:footer>
+        <div>
+          <button
+            class="button button__ghost button__danger"
+            @click="closeModal"
+          >
+            Cancelar
+          </button>
+          <button class="button button__primary" @click="fetchWithdrawals">
+            Salvar
+          </button>
+        </div>
+      </template>
+    </modal>
   </div>
 </template>
 
 <script>
 import Card from '@/components/Card.vue'
+import Modal from '@/components/Modal.vue'
+
 import { format } from 'date-fns'
 import { UilFilter } from '@iconscout/vue-unicons'
 
+import fontawesome from '@fortawesome/fontawesome'
+import faSolid from '@fortawesome/fontawesome-free-solid'
+
+import { mapMutations } from 'vuex'
+
 export default {
-  components: { Card, UilFilter },
+  components: { Modal, Card, UilFilter },
   data: () => ({
     withdraws: [],
-    searchStatus: 0
+    searchStatus: null
   }),
   filters: {
     dateFilter(timestamp) {
@@ -62,13 +118,39 @@ export default {
       return format(date, 'dd/MM/yyyy')
     }
   },
-  async created() {
-    try {
-      const { data } = await this.$axios.get('/user/withdraw')
-      this.withdraws = data.withdraws
-    } catch (e) {
-      console.error(e)
+  methods: {
+    ...mapMutations(['setAddFundsModal']),
+    closeModal() {
+      this.searchStatus = null
+      this.setAddFundsModal(false)
+    },
+    async fetchWithdrawals() {
+      try {
+        const { data } = await this.$axios.get(
+          `/user/withdraw/${this.searchStatus || ''}`
+        )
+        if (data.withdraws) {
+          this.withdraws = data.withdraws
+        }
+      } catch (_e) {
+        this.$toasted.show(
+          `${
+            fontawesome.icon(faSolid.faExclamationTriangle).html
+          } Não foi possível realizar a consulta das solicitações`,
+          {
+            duration: 10000,
+            position: 'top-center',
+            fullWidth: true,
+            className: 'toasty'
+          }
+        )
+      } finally {
+        this.setAddFundsModal(false)
+      }
     }
+  },
+  created() {
+    this.fetchWithdrawals()
   }
 }
 </script>
@@ -86,6 +168,9 @@ export default {
     font-family: 'Quicksand', sans-serif;
     &.pendent {
       background: $warning;
+    }
+    &.confirmed {
+      background: $accent;
     }
   }
   .payment {
@@ -118,6 +203,18 @@ export default {
     &:hover {
       cursor: pointer;
     }
+  }
+
+  input[type='radio'] {
+    width: 25px;
+    height: 25px;
+    margin-left: 15px;
+    &:hover {
+      background-color: red;
+    }
+  }
+  label.label {
+    margin-top: 0;
   }
 }
 </style>
