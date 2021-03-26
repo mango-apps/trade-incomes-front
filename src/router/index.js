@@ -33,6 +33,12 @@ const routes = [
         name: 'Client Register',
         component: () => import('../views/admin/RegisterNewClient.vue'),
         meta: { adminAuth: true }
+      },
+      {
+        path: 'withdrawals',
+        name: 'Withdrawals Requests',
+        component: () => import('../views/admin/Withdrawals.vue'),
+        meta: { adminAuth: true }
       }
     ]
   },
