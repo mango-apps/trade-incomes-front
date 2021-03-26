@@ -15,17 +15,21 @@
           <span v-if="searchStatus === 0 || !searchStatus" class="is-dark">
             Pendente
           </span>
-          <span v-else-if="searchStatus === 1" class="is-dark">Realizado</span>
+          <span v-else-if="searchStatus === 1" class="is-dark">Depositado</span>
         </span>
       </p>
-      <div class="filter" @click="setAddFundsModal(true)">
+      <div class="filter" @click="openFilter">
         <uil-filter size="30px" />
         <p class="is-green">Filtrar</p>
       </div>
     </div>
     <div class="card-list">
       <Card v-for="(withdrawal, index) in withdraws" :key="withdrawal._id">
-        <div class="flex flex-column" style="flex: 1;">
+        <div
+          class="flex flex-column"
+          style="flex: 1;"
+          @click="openDetails(withdrawal)"
+        >
           <div class="flex space-between flex-row top header">
             <h4>
               Solicitação de saque n°
@@ -34,11 +38,18 @@
             <p>{{ withdrawal.createdAt | dateFilter }}</p>
           </div>
           <div class="flex space-between flex-row vertical-center">
-            <div :class="['status', { pendent: withdrawal.status === 0 }]">
-              {{ withdrawal.status === 0 && 'Pendente' }}
+            <div
+              :class="[
+                'status',
+                { pendent: withdrawal.status === 0 },
+                { confirmed: withdrawal.status === 1 }
+              ]"
+            >
+              <span v-if="withdrawal.status === 0">Pendente</span>
+              <span v-if="withdrawal.status === 1">Despositado</span>
             </div>
             <div class="payment flex space-around" style="flex: 0.80;">
-              <p class="is-pink">*{{ withdrawal.method }}</p>
+              <p class="is-pink bold">*{{ withdrawal.method }}</p>
               <p class="is-green">
                 {{
                   withdrawal.Withdraw.toLocaleString('pt-BR', {
@@ -52,7 +63,7 @@
         </div>
       </Card>
     </div>
-    <modal>
+    <modal v-if="!isDetails">
       <template v-slot:header>
         <h1 class="title fs-medium">Filtrar Solicitações de Saque</h1>
       </template>
@@ -68,7 +79,7 @@
           />
         </div>
         <div class="flex flex-row vertical-center">
-          <label for="confirmedStatus" class="label">Realizado: </label>
+          <label for="confirmedStatus" class="label">Depositado: </label>
           <input
             type="radio"
             id="confirmedStatus"
@@ -87,6 +98,53 @@
           </button>
           <button class="button button__primary" @click="fetchWithdrawals">
             Salvar
+          </button>
+        </div>
+      </template>
+    </modal>
+    <modal v-else>
+      <template v-slot:header>
+        <h1 class="title fs-medium">Solicitação de Saque</h1>
+      </template>
+      <template v-slot:body>
+        <div class="form-details">
+          <p>Nome Completo:</p>
+          <h3 class="is-medium">{{ detailsToShow.user.name }}</h3>
+          <div v-if="detailsToShow.method === 'PIX'">
+            <p>Chave PIX:</p>
+            <h3>{{ detailsToShow.pixKey }}</h3>
+            <p>CPF:</p>
+            <h3>{{ detailsToShow.user.cpf }}</h3>
+          </div>
+          <div v-if="detailsToShow.method === 'TED'">
+            <p>Banco:</p>
+            <h3>{{ detailsToShow.bankCode }}</h3>
+            <p>Agência:</p>
+            <h3>{{ detailsToShow.bankAgency }}</h3>
+            <p>Conta:</p>
+            <h3>{{ detailsToShow.bankAccount }}</h3>
+          </div>
+          <h3>
+            Quantia:
+            <span class="is-green">{{
+              detailsToShow.Withdraw.toLocaleString('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+              })
+            }}</span>
+          </h3>
+        </div>
+      </template>
+      <template v-slot:footer>
+        <div>
+          <button
+            class="button button__ghost button__danger"
+            @click="closeModal"
+          >
+            Cancelar
+          </button>
+          <button class="button button__primary" @click="deposit">
+            Depositar
           </button>
         </div>
       </template>
@@ -110,7 +168,9 @@ export default {
   components: { Modal, Card, UilFilter },
   data: () => ({
     withdraws: [],
-    searchStatus: null
+    searchStatus: null,
+    isDetails: false,
+    detailsToShow: {}
   }),
   filters: {
     dateFilter(timestamp) {
@@ -127,7 +187,7 @@ export default {
     async fetchWithdrawals() {
       try {
         const { data } = await this.$axios.get(
-          `/manager/withdrawals/${this.searchStatus || ''}`
+          `/manager/withdrawals/${this.searchStatus || 0}`
         )
         if (data.withdraws) {
           this.withdraws = data.withdraws
@@ -147,6 +207,37 @@ export default {
       } finally {
         this.setAddFundsModal(false)
       }
+    },
+    async deposit() {
+      try {
+        const { data } = await this.$axios.post('/manager/withdrawals', {
+          id: this.detailsToShow._id
+        })
+        console.log(data)
+      } catch (_e) {
+        this.$toasted.show(
+          `${
+            fontawesome.icon(faSolid.faExclamationTriangle).html
+          } Não foi possível fazer a confirmação do depósito`,
+          {
+            duration: 10000,
+            position: 'top-center',
+            fullWidth: true,
+            className: 'toasty'
+          }
+        )
+      } finally {
+        this.closeModal()
+      }
+    },
+    openFilter() {
+      this.isDetails = false
+      this.setAddFundsModal(true)
+    },
+    openDetails(withdraw) {
+      this.isDetails = true
+      this.detailsToShow = withdraw
+      this.setAddFundsModal(true)
     }
   },
   created() {
@@ -158,14 +249,15 @@ export default {
 <style lang="scss" scoped>
 .container {
   .status {
-    width: 75px;
     height: 20px;
     border-radius: 25px;
     text-align: center;
     padding: 5px 15px;
-    color: $background;
     font-weight: bold;
     font-family: 'Quicksand', sans-serif;
+    span {
+      color: $background;
+    }
     &.pendent {
       background: $warning;
     }
@@ -215,6 +307,15 @@ export default {
   }
   label.label {
     margin-top: 0;
+  }
+  .form-details {
+    p,
+    h3 {
+      margin: 0;
+    }
+    h3 {
+      margin-bottom: 15px;
+    }
   }
 }
 </style>
