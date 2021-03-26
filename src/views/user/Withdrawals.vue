@@ -1,10 +1,22 @@
 <template>
   <div class="container">
     <h1 class="title">Solicitações de Saque</h1>
+    <div class="flex space-between flex-row vertical-center">
+      <p>
+        Filtrando por:
+        <span :class="['status', { pendent: searchStatus === 0 }]">
+          {{ searchStatus === 0 && 'Pendente' }}
+        </span>
+      </p>
+      <div class="filter">
+        <uil-filter size="30px" />
+        <p class="is-green">Filtrar</p>
+      </div>
+    </div>
     <div class="card-list">
       <Card v-for="(withdrawal, index) in withdraws" :key="withdrawal._id">
         <div class="flex flex-column" style="flex: 1;">
-          <div class="flex space-between flex-row top">
+          <div class="flex space-between flex-row top header">
             <h4>
               Solicitação de saque n°
               {{ index + 1 > 99 ? `${index}` : `0${index + 1}` }}
@@ -36,10 +48,13 @@
 <script>
 import Card from '@/components/Card.vue'
 import { format } from 'date-fns'
+import { UilFilter } from '@iconscout/vue-unicons'
+
 export default {
-  components: { Card },
+  components: { Card, UilFilter },
   data: () => ({
-    withdraws: []
+    withdraws: [],
+    searchStatus: 0
   }),
   filters: {
     dateFilter(timestamp) {
@@ -76,6 +91,32 @@ export default {
   .payment {
     p {
       font-size: 22px;
+    }
+  }
+
+  .card-list {
+    .header {
+      h4,
+      p {
+        margin: 15px 0;
+      }
+    }
+  }
+
+  .filter {
+    .ui-svg-inline {
+      color: $accent;
+    }
+
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+    p {
+      margin: 0;
+    }
+    &:hover {
+      cursor: pointer;
     }
   }
 }
