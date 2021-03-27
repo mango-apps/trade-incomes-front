@@ -112,11 +112,11 @@
         <div class="form-details">
           <p>Nome Completo:</p>
           <h3 class="is-medium">{{ detailsToShow.user.name }}</h3>
+          <p>CPF:</p>
+          <h3>{{ detailsToShow.user.cpf }}</h3>
           <div v-if="detailsToShow.method === 'PIX'">
             <p>Chave PIX:</p>
             <h3>{{ detailsToShow.pixKey }}</h3>
-            <p>CPF:</p>
-            <h3>{{ detailsToShow.user.cpf }}</h3>
           </div>
           <div v-if="detailsToShow.method === 'TED'">
             <p>Banco:</p>
