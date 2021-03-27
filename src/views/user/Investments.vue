@@ -23,7 +23,7 @@
             </p>
             <span class="is-green">
               {{
-                fund.gained.toLocaleString('pt-BR', {
+                (fund.gained + fund.invested).toLocaleString('pt-BR', {
                   style: 'currency',
                   currency: 'BRL'
                 })
@@ -35,7 +35,12 @@
               Ganho:
             </p>
             <span class="is-blue">
-              {{ ((fund.gained / fund.invested) * 100 - 100).toFixed(1) }}%
+              {{
+                (
+                  ((fund.gained + fund.invested) / fund.invested) * 100 -
+                  100
+                ).toFixed(1)
+              }}%
             </span>
           </div>
           <div
@@ -165,6 +170,15 @@
             {{ bank.Code }} - {{ bank.Name }}
           </option>
         </select>
+        <label for="cpf" class="label">CPF:</label>
+        <input
+          type="text"
+          class="input"
+          id="cpf"
+          v-model="cpf"
+          v-mask="'###.###.###-##'"
+          placeholder="123.456.789-10"
+        />
         <label class="label" for="agency">Agência:</label>
         <input
           id="agency"
@@ -227,6 +241,7 @@ export default {
     bankCode: null,
     bankAgency: null,
     bankAccount: null,
+    cpf: null,
     step: 1
   }),
 
@@ -291,7 +306,8 @@ export default {
           pixKey: this.pixKey,
           bankCode: this.bankCode,
           bankAgency: this.bankAgency,
-          bankAccount: this.bankAccount
+          bankAccount: this.bankAccount,
+          cpf: this.cpf
         })
         if (data.withdraw) {
           this.closeModal()

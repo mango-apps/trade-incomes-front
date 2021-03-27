@@ -28,7 +28,7 @@
             </p>
             <span class="is-green">
               {{
-                fund.gained.toLocaleString('pt-BR', {
+                (fund.gained + fund.invested).toLocaleString('pt-BR', {
                   style: 'currency',
                   currency: 'BRL'
                 })
@@ -40,7 +40,12 @@
               Ganho:
             </p>
             <span class="is-blue">
-              {{ ((fund.gained / fund.invested) * 100 - 100).toFixed(1) }}%
+              {{
+                (
+                  ((fund.gained + fund.invested) / fund.invested) * 100 -
+                  100
+                ).toFixed(1)
+              }}%
             </span>
           </div>
         </div>
