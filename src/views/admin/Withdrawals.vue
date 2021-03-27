@@ -23,7 +23,7 @@
         <p class="is-green">Filtrar</p>
       </div>
     </div>
-    <div class="card-list">
+    <div class="card-list flex flex-column">
       <Card v-for="(withdrawal, index) in withdraws" :key="withdrawal._id">
         <div
           class="flex flex-column"
@@ -48,8 +48,10 @@
               <span v-if="withdrawal.status === 0">Pendente</span>
               <span v-if="withdrawal.status === 1">Despositado</span>
             </div>
-            <div class="payment flex space-around" style="flex: 0.80;">
-              <p class="is-pink bold">*{{ withdrawal.method }}</p>
+            <div class="payment flex end" style="flex: 1;">
+              <p class="is-pink bold" style="margin-right: 10px;">
+                *{{ withdrawal.method }}
+              </p>
               <p class="is-green">
                 {{
                   withdrawal.Withdraw.toLocaleString('pt-BR', {
@@ -227,6 +229,7 @@ export default {
           }
         )
       } finally {
+        this.fetchWithdrawals()
         this.closeModal()
       }
     },
@@ -272,6 +275,7 @@ export default {
   }
 
   .card-list {
+    align-items: center;
     .header {
       h4,
       p {
