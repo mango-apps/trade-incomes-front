@@ -23,7 +23,7 @@
         <p class="is-green">Filtrar</p>
       </div>
     </div>
-    <div class="card-list">
+    <div class="card-list flex flex-column">
       <Card v-for="(withdrawal, index) in withdraws" :key="withdrawal._id">
         <div class="flex flex-column" style="flex: 1;">
           <div class="flex space-between flex-row top header">
@@ -34,11 +34,20 @@
             <p>{{ withdrawal.createdAt | dateFilter }}</p>
           </div>
           <div class="flex space-between flex-row vertical-center">
-            <div :class="['status', { pendent: withdrawal.status === 0 }]">
-              {{ withdrawal.status === 0 && 'Pendente' }}
+            <div
+              :class="[
+                'status',
+                { pendent: withdrawal.status === 0 },
+                { confirmed: withdrawal.status === 1 }
+              ]"
+            >
+              <span v-if="withdrawal.status === 0">Pendente</span>
+              <span v-if="withdrawal.status === 1">Realizado</span>
             </div>
-            <div class="payment flex space-around" style="flex: 0.80;">
-              <p class="is-pink">*{{ withdrawal.method }}</p>
+            <div class="payment flex end" style="flex: 1;">
+              <p class="is-pink bold" style="margin-right: 10px;">
+                *{{ withdrawal.method }}
+              </p>
               <p class="is-green">
                 {{
                   withdrawal.Withdraw.toLocaleString('pt-BR', {
@@ -127,7 +136,7 @@ export default {
     async fetchWithdrawals() {
       try {
         const { data } = await this.$axios.get(
-          `/user/withdraw/${this.searchStatus || ''}`
+          `/user/withdraw/${this.searchStatus || 0}`
         )
         if (data.withdraws) {
           this.withdraws = data.withdraws
@@ -158,14 +167,15 @@ export default {
 <style lang="scss" scoped>
 .container {
   .status {
-    width: 75px;
     height: 20px;
     border-radius: 25px;
     text-align: center;
     padding: 5px 15px;
-    color: $background;
     font-weight: bold;
     font-family: 'Quicksand', sans-serif;
+    span {
+      color: $background;
+    }
     &.pendent {
       background: $warning;
     }
@@ -180,6 +190,7 @@ export default {
   }
 
   .card-list {
+    align-items: center;
     .header {
       h4,
       p {
