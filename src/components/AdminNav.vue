@@ -35,7 +35,15 @@
     >
       <uil-user-plus size="30px" /> Cliente
     </router-link>
-    <router-link to="/admin/clients" class="nav-item flex flex-column">
+    <router-link
+      to="/admin/settings"
+      :class="[
+        'nav-item flex flex-column',
+        {
+          active: $route.name === 'Admin Settings'
+        }
+      ]"
+    >
       <uil-setting size="30px" /> Configs
     </router-link>
 

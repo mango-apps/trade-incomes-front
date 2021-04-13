@@ -39,6 +39,12 @@ const routes = [
         name: 'Withdrawals Requests',
         component: () => import('../views/admin/Withdrawals.vue'),
         meta: { adminAuth: true }
+      },
+      {
+        path: 'settings',
+        name: 'Admin Settings',
+        component: () => import('../views/admin/Settings.vue'),
+        meta: { adminAuth: true }
       }
     ]
   },
