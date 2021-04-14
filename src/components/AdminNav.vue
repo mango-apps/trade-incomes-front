@@ -40,7 +40,9 @@
       :class="[
         'nav-item flex flex-column',
         {
-          active: $route.name === 'Admin Settings'
+          active:
+            $route.name === 'Admin Settings' ||
+            $route.name === 'Change Admin Pass'
         }
       ]"
     >
