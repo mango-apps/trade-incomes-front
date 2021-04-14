@@ -45,6 +45,12 @@ const routes = [
         name: 'Admin Settings',
         component: () => import('../views/admin/Settings.vue'),
         meta: { adminAuth: true }
+      },
+      {
+        path: 'change-pass',
+        name: 'Change Admin Pass',
+        component: () => import('../views/admin/ChangePass.vue'),
+        meta: { adminAuth: true }
       }
     ]
   },
