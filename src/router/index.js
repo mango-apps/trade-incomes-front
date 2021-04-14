@@ -76,6 +76,12 @@ const routes = [
         name: 'Client Withdrawals Requests',
         component: () => import('../views/user/Withdrawals'),
         meta: { userAuth: true }
+      },
+      {
+        path: 'change-pass',
+        name: 'Change User Pass',
+        component: () => import('../views/user/ChangePass.vue'),
+        meta: { userAuth: true }
       }
     ]
   }
