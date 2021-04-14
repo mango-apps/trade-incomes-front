@@ -1,7 +1,9 @@
 <template>
   <div class="container">
     <h1 class="title">Configurações</h1>
-    <button>Trocar senha <uil-key-skeleton size="30px" /></button>
+    <button @click="$router.push({ name: 'Change Admin Pass' })">
+      Trocar senha <uil-key-skeleton size="30px" />
+    </button>
     <button @click.prevent="logout">Sair <uil-signout size="30px" /></button>
   </div>
 </template>
