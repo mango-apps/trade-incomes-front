@@ -31,10 +31,47 @@
             </svg>
             {{ user.phone }}
           </p>
-          <div class="cash flex space-between">
-            <p class="is-pink">R$ 1.000,00</p>
-            <p class="is-green">R$ 2.000,00</p>
-            <p class="is-blue">100%</p>
+          <div v-if="user.fund" class="cash flex space-between">
+            <p class="is-pink">
+              {{
+                user.fund.invested.toLocaleString('pt-BR', {
+                  style: 'currency',
+                  currency: 'BRL'
+                })
+              }}
+            </p>
+            <p class="is-green">
+              {{
+                (user.fund.gained + user.fund.invested).toLocaleString(
+                  'pt-BR',
+                  {
+                    style: 'currency',
+                    currency: 'BRL'
+                  }
+                )
+              }}
+            </p>
+            <p class="is-blue">
+              {{
+                (
+                  ((user.fund.gained + user.fund.invested) /
+                    user.fund.invested) *
+                    100 -
+                  100
+                ).toFixed(1)
+              }}%
+            </p>
+          </div>
+          <div v-else class="cash flex space-between">
+            <p class="is-pink">
+              R$ 0,00
+            </p>
+            <p class="is-green">
+              R$ 0,00
+            </p>
+            <p class="is-blue">
+              0%
+            </p>
           </div>
         </div>
       </Card>
@@ -56,10 +93,10 @@ export default {
   async mounted() {
     try {
       const {
-        data: { users }
+        data: { userWithFunds }
       } = await this.$axios.get('/manager/users')
 
-      this.users = users
+      this.users = userWithFunds
     } catch (error) {
       console.error(error)
     } finally {
