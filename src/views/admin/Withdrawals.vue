@@ -23,7 +23,7 @@
         <p class="is-green">Filtrar</p>
       </div>
     </div>
-    <div class="card-list flex flex-column">
+    <div v-if="withdraws.length" class="card-list flex flex-column">
       <Card v-for="(withdrawal, index) in withdraws" :key="withdrawal._id">
         <div
           class="flex flex-column"
@@ -64,6 +64,9 @@
           </div>
         </div>
       </Card>
+    </div>
+    <div v-else>
+      <h3 class="lighter txt-center">Não solicitações para listagem.</h3>
     </div>
     <modal v-if="!isDetails">
       <template v-slot:header>

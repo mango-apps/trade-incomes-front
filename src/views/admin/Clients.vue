@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <h1 class="title">Lista de Clientes</h1>
-    <div v-if="!loading" class="card-list flex flex-column">
+    <div v-if="!loading && users.length" class="card-list flex flex-column">
       <Card
         v-for="user in users"
         :key="user.cpf"
@@ -75,6 +75,9 @@
           </div>
         </div>
       </Card>
+    </div>
+    <div v-else-if="!users.length && !loading">
+      <h3 class="lighter txt-center">Nenhum usuário foi cadastrado ainda.</h3>
     </div>
   </div>
 </template>
