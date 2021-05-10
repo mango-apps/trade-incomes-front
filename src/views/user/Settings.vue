@@ -41,6 +41,11 @@ button {
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: #efefef;
+  @media (prefers-color-scheme: dark) {
+    color: $background;
+    background-color: #efefef;
+  }
   &:nth-of-type(2) {
     color: $foreground;
     background: $danger;
