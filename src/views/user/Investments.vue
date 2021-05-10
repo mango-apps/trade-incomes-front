@@ -131,15 +131,25 @@
         <h1 class="title fs-medium">Insira sua Chave PIX</h1>
       </template>
       <template v-slot:body>
+        <label class="label" for="fullname">Nome completo:</label>
+        <input
+          type="text"
+          id="fullname"
+          placeholder="João José da Silva"
+          v-model="fullname"
+          :class="['input', { dirty: fullnameDirty }]"
+        />
+        <span v-if="fullnameDirty" class="is-red">{{ fullnameDirty }}</span>
+
         <label class="label" for="pixKey">Chave PIX:</label>
         <input
           id="pixKey"
           type="text"
-          class="input"
           placeholder="Email, telefone ou chave randômica."
           v-model="pixKey"
-          :class="{ dirty: pixKeyDirty }"
+          :class="['input', { dirty: pixKeyDirty }]"
         />
+        <span v-if="pixKeyDirty" class="is-red">{{ pixKeyDirty }}</span>
       </template>
       <template v-slot:footer>
         <div>
@@ -160,6 +170,15 @@
         <h1 class="title fs-medium">Insira os dados para a TED</h1>
       </template>
       <template v-slot:body>
+        <label class="label" for="fullname">Nome completo:</label>
+        <input
+          type="text"
+          id="fullname"
+          placeholder="João José da Silva"
+          v-model="fullname"
+          :class="['input', { dirty: fullnameDirty }]"
+        />
+        <span v-if="fullnameDirty" class="is-red">{{ fullnameDirty }}</span>
         <label class="label" for="bank">Banco:</label>
         <select class="input" name="bank" id="bank" v-model="bankCode">
           <option
@@ -237,6 +256,8 @@ export default {
     paymentMethod: null,
     pixKey: null,
     pixKeyDirty: null,
+    fullname: null,
+    fullnameDirty: null,
     banks: Banks,
     bankCode: null,
     bankAgency: null,
@@ -244,6 +265,15 @@ export default {
     cpf: null,
     step: 1
   }),
+
+  watch: {
+    fullname() {
+      this.fullnameDirty = null
+    },
+    pixKey() {
+      this.pixKeyDirty = null
+    }
+  },
 
   methods: {
     ...mapMutations(['setAddFundsModal']),
@@ -298,36 +328,48 @@ export default {
 
     async checkOut() {
       this.loading = true
-      try {
-        const { data } = await this.$axios.post('/user/withdraw', {
-          idFund: this.idFund,
-          value: this.widthdrawValue,
-          method: this.paymentMethod,
-          pixKey: this.pixKey,
-          bankCode: this.bankCode,
-          bankAgency: this.bankAgency,
-          bankAccount: this.bankAccount,
-          cpf: this.cpf
-        })
-        if (data.withdraw) {
-          this.closeModal()
-          this.fetchFunds()
-        }
-      } catch (e) {
-        this.$toasted.show(
-          `${
-            fontawesome.icon(faSolid.faExclamationTriangle).html
-          } Não foi possível realizar a solicitação`,
-          {
-            duration: 30000,
-            position: 'bottom-center',
-            fullWidth: true,
-            className: 'toasty'
-          }
-        )
-        this.closeModal()
-      } finally {
+
+      if (!this.fullname) {
+        this.fullnameDirty = 'Nome completo é obrigatório'
         this.loading = false
+        return
+      } else if (this.paymentMethod === 'PIX' && !this.pixKey) {
+        this.pixKeyDirty = 'Chave PIX é obrigatória'
+        this.loading = false
+        return
+      } else {
+        try {
+          const { data } = await this.$axios.post('/user/withdraw', {
+            idFund: this.idFund,
+            value: this.widthdrawValue,
+            method: this.paymentMethod,
+            pixKey: this.pixKey,
+            fullname: this.fullname,
+            bankCode: this.bankCode,
+            bankAgency: this.bankAgency,
+            bankAccount: this.bankAccount,
+            cpf: this.cpf
+          })
+          if (data.withdraw) {
+            this.closeModal()
+            this.fetchFunds()
+          }
+        } catch (e) {
+          this.$toasted.show(
+            `${
+              fontawesome.icon(faSolid.faExclamationTriangle).html
+            } Não foi possível realizar a solicitação`,
+            {
+              duration: 30000,
+              position: 'bottom-center',
+              fullWidth: true,
+              className: 'toasty'
+            }
+          )
+          this.closeModal()
+        } finally {
+          this.loading = false
+        }
       }
     }
   },
