@@ -290,7 +290,7 @@ export default {
 
     openModal(fund) {
       if (fund.status === 0) {
-        this.balance = fund.gained
+        this.balance = fund.gained + fund.invested
         this.idFund = fund._id
         this.setAddFundsModal(true)
       }
