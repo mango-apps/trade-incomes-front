@@ -179,6 +179,10 @@ export default {
       font-weight: bold;
       color: $background;
       font-size: 1.15rem;
+      @media (prefers-color-scheme: dark) {
+        color: $background;
+        background-color: #efefef;
+      }
       @media (min-width: 600px) {
         position: unset;
         margin-top: 1rem;
