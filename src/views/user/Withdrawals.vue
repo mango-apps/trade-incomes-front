@@ -50,7 +50,7 @@
               </p>
               <p class="is-green">
                 {{
-                  withdrawal.Withdraw.toLocaleString('pt-BR', {
+                  withdrawal.amount.toLocaleString('pt-BR', {
                     style: 'currency',
                     currency: 'BRL'
                   })

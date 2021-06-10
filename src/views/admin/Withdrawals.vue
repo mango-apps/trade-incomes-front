@@ -54,7 +54,7 @@
               </p>
               <p class="is-green">
                 {{
-                  withdrawal.Withdraw.toLocaleString('pt-BR', {
+                  withdrawal.amount.toLocaleString('pt-BR', {
                     style: 'currency',
                     currency: 'BRL'
                   })
@@ -132,7 +132,7 @@
           <h3>
             Quantia:
             <span class="is-green">{{
-              detailsToShow.Withdraw.toLocaleString('pt-BR', {
+              detailsToShow.amount.toLocaleString('pt-BR', {
                 style: 'currency',
                 currency: 'BRL'
               })

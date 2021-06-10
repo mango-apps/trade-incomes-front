@@ -341,7 +341,7 @@ export default {
         try {
           const { data } = await this.$axios.post('/user/withdraw', {
             idFund: this.idFund,
-            value: this.widthdrawValue,
+            amount: this.widthdrawValue,
             method: this.paymentMethod,
             pixKey: this.pixKey,
             fullname: this.fullname,
